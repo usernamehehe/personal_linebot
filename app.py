@@ -12,7 +12,6 @@ from linebot.v3.webhooks import (MessageEvent, TextMessageContent)
 import tempfile
 import os
 import datetime
-import openai
 import time
 import requests
 
