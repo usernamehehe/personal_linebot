@@ -23,10 +23,9 @@ def crawler():
     # print('Google搜尋結果頁面共有以下標題與連結:')
 
     for elem, ele in zip(title, link):
-
         output += '{}\n{}\n'.format(elem, ele)
         # print("- " + elem + "\n" + ele)
-    print(output)
+    return output
 
 
 # import requests
