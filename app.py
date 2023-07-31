@@ -1,20 +1,20 @@
+import os
 from flask import Flask, request, abort
-
-from linebot import (
-    LineBotApi, WebhookHandler
-)
-from linebot.exceptions import (
-    InvalidSignatureError
-)
+from linebot import (LineBotApi, WebhookHandler)
+from linebot.exceptions import (InvalidSignatureError)
 from linebot.models import *
+from bs4 import BeautifulSoup
+from urllib.request import urlretrieve
 
-#======python的函數庫==========
-import tempfile, os
+# ======python的函數庫==========
+import tempfile
+import os
 import datetime
 import openai
 import time
+import requests
 
-#======python的函數庫==========
+# ======python的函數庫==========
 
 app = Flask(__name__)
 static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
@@ -23,15 +23,50 @@ line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
 # Channel Secret
 handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
 # OPENAI API Key初始化設定
-openai.api_key = os.getenv('OPENAI_API_KEY')
+# openai.api_key = os.getenv('OPENAI_API_KEY')
 
 
+@app.route("/", methods=['GET'])
+def hello():
+    return "Hello World!"
+
+
+@app.route("/", methods=['POST'])
+def callback():
+    # get X-Line-Signature header value
+    signature = request.headers['X-Line-Signature']
+    # get request body as text
+    body = request.get_data(as_text=True)
+    print("Request body: " + body, "Signature: " + signature)
+    # handle webhook body
+    try:
+        handler.handle(body, signature)
+    except InvalidSignatureError:
+        abort(400)
+    return 'OK'
+
+
+@handler.add(MessageEvent, message=TextMessage)
+def handle_message(event):
+    msg = event.message.text
+    print(msg)
+    msg = msg.encode('utf-8')
+    line_bot_api.reply_message(
+        event.reply_token, TextSendMessage(text=event.message.text))
+
+
+if __name__ == "__main__":
+    app.run(debug=True, port=80)
+
+'''
+---------------------範例程式-----------------------
 def GPT_response(text):
     # 接收回應
-    response = openai.Completion.create(model="text-davinci-003", prompt=text, temperature=0.5, max_tokens=500)
+    response = openai.Completion.create(
+        model="text-davinci-003", prompt=text, temperature=0.5, max_tokens=500)
     print(response)
     # 重組回應
-    answer = response['choices'][0]['text'].replace('。','')
+    answer = response['choices'][0]['text'].replace('。', '')
     return answer
 
 
@@ -59,6 +94,7 @@ def handle_message(event):
     print(GPT_answer)
     line_bot_api.reply_message(event.reply_token, TextSendMessage(GPT_answer))
 
+
 @handler.add(PostbackEvent)
 def handle_message(event):
     print(event.postback.data)
@@ -72,9 +108,9 @@ def welcome(event):
     name = profile.display_name
     message = TextSendMessage(text=f'{name}歡迎加入')
     line_bot_api.reply_message(event.reply_token, message)
-        
-        
-import os
+
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
+---------------------範例程式-----------------------
+'''
