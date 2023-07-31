@@ -1,10 +1,12 @@
-import os
-from flask import Flask, request, abort
-from linebot import (LineBotApi, WebhookHandler)
-from linebot.exceptions import (InvalidSignatureError)
-from linebot.models import *
 #from bs4 import BeautifulSoup
 from urllib.request import urlretrieve
+
+from flask import Flask, request, abort
+from linebot.v3 import (WebhookHandler)
+from linebot.v3.exceptions import (InvalidSignatureError)
+from linebot.v3.messaging import (
+    Configuration, ApiClient, MessagingApi, ReplyMessageRequest, TextMessage)
+from linebot.v3.webhooks import (MessageEvent, TextMessageContent)
 
 # ======python的函數庫==========
 import tempfile
@@ -17,13 +19,9 @@ import requests
 # ======python的函數庫==========
 
 app = Flask(__name__)
-static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
-# Channel Access Token
-line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
-# Channel Secret
-handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
-# OPENAI API Key初始化設定
-# openai.api_key = os.getenv('OPENAI_API_KEY')
+
+configuration = Configuration(access_token='CHANNEL_ACCESS_TOKEN')
+handler = WebhookHandler('CHANNEL_SECRET')
 
 
 @app.route("/", methods=['GET'])
