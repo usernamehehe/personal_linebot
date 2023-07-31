@@ -26,7 +26,7 @@ def crawler():
 
         output += '{}\n{}\n'.format(elem, ele)
         # print("- " + elem + "\n" + ele)
-    return output
+    print(output)
 
 
 # import requests
