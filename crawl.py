@@ -2,26 +2,31 @@ import sys
 import requests
 from bs4 import BeautifulSoup
 
-# 搜尋字詞
-query = 'ai概念股'
+
+def crawler():
+    # 搜尋字詞
+    query = 'ai概念股'
 
 # 設定hearers
-headers = {
-    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'}
+    headers = {
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'}
 
 # 執行爬蟲下載搜尋結果頁面標題
-url = 'https://www.google.com/search?q=' + query
-response = requests.get(url, headers=headers)
-soup = BeautifulSoup(response.text, 'html.parser')
-content = soup.find_all('div', class_='g')
-title = [elem.find('h3').getText() for elem in content]
-link = [ele.find('a').get('href') for ele in content]
+    url = 'https://www.google.com/search?q=' + query
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    content = soup.find_all('div', class_='g')
+    title = [elem.find('h3').getText() for elem in content]
+    link = [ele.find('a').get('href') for ele in content]
+    output = ''
+    # 輸出查詢結果
+    # print('Google搜尋結果頁面共有以下標題與連結:')
 
-# 輸出查詢結果
-print('Google搜尋結果頁面共有以下標題與連結:')
+    for elem, ele in zip(title, link):
 
-for elem, ele in zip(title, link):
-    print("- " + elem + "\n" + ele)
+        output += '{}\n{}\n'.format(elem, ele)
+        # print("- " + elem + "\n" + ele)
+    return output
 
 
 # import requests
