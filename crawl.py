@@ -18,14 +18,16 @@ def crawler():
     content = soup.find_all('div', class_='g')
     title = [elem.find('h3').getText() for elem in content]
     link = [ele.find('a').get('href') for ele in content]
+    output_message = '以下為Google搜尋結果頁面共有以下標題與連結:'
     output = ''
+
     # 輸出查詢結果
     # print('Google搜尋結果頁面共有以下標題與連結:')
 
     for elem, ele in zip(title, link):
         output += '{}\n{}\n'.format(elem, ele)
         # print("- " + elem + "\n" + ele)
-    return output
+    return output_message + "\n" + output
 
 
 # import requests
