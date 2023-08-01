@@ -48,8 +48,10 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessageContent)
 def handle_message(event):
-    if event.message.text == '爬蟲':
-        a = crawl.crawler()
+    msg = event.message.text
+    crawl_msg = msg[2:]
+    if '爬蟲' in msg:
+        a = crawl.crawler(crawl_msg)
         with ApiClient(configuration) as api_client:
             line_bot_api = MessagingApi(api_client)
             line_bot_api.reply_message_with_http_info(

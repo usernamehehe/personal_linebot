@@ -3,16 +3,15 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def crawler():
+def crawler(fuck):
     # 搜尋字詞
-    query = 'ai概念股'
 
-# 設定hearers
+    # 設定hearers
     headers = {
         'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'}
 
 # 執行爬蟲下載搜尋結果頁面標題
-    url = 'https://www.google.com/search?q=' + query
+    url = 'https://www.google.com/search?q=' + fuck
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, 'html.parser')
     content = soup.find_all('div', class_='g')
