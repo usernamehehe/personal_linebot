@@ -7,6 +7,8 @@ from linebot.v3.exceptions import (InvalidSignatureError)
 from linebot.v3.messaging import (
     Configuration, ApiClient, MessagingApi, ReplyMessageRequest, TextMessage)
 from linebot.v3.webhooks import (MessageEvent, TextMessageContent)
+from linebot.models import MessageEvent, TextMessage, TemplateSendMessage, ButtonsTemplate, URIAction
+
 
 # ======python的函數庫==========
 import tempfile
@@ -50,14 +52,39 @@ def callback():
 def handle_message(event):
     msg = event.message.text
     crawl_msg = msg[2:]
-    if '爬蟲' in msg:
-        a = crawl.crawler(crawl_msg)
-        with ApiClient(configuration) as api_client:
-            line_bot_api = MessagingApi(api_client)
+
+    with ApiClient(configuration) as api_client:
+        line_bot_api = MessagingApi(api_client)
+
+        if '爬蟲' in msg:
+            a = crawl.crawler(crawl_msg)
             line_bot_api.reply_message_with_http_info(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
                     messages=[TextMessage(text=a)]
+                )
+            )
+
+        if msg == 'LinkedIn':
+            message = TemplateSendMessage(
+                alt_text='LinkedIn',
+                template=ButtonsTemplate(
+                    title='進去',
+                    text='請選擇進入的網頁',
+                    actions=[
+                        URIAction(
+                            label='Google',
+                            uri='https://www.google.com/'
+                        ),
+                        URIAction(
+                            label='Yahoo',
+                            uri='https://www.yahoo.com/'
+                        ),
+                        URIAction(
+                            label='OpenAI',
+                            uri='https://openai.com/'
+                        )
+                    ]
                 )
             )
 
