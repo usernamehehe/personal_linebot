@@ -52,6 +52,7 @@ def callback():
 def handle_message(event):
     msg = event.message.text
     crawl_msg = msg[2:]
+
     if '爬蟲' in msg:
         a = crawl.crawler(crawl_msg)
         with ApiClient(configuration) as api_client:
@@ -63,28 +64,28 @@ def handle_message(event):
                 )
             )
 
-    if msg == 'LinkedIn':
-        message = TemplateSendMessage(
-            alt_text='LinkedIn',
-            template=ButtonsTemplate(
-                title='進去',
-                text='請選擇進入的網頁',
-                actions=[
-                    URIAction(
-                        label='Google',
-                        uri='https://www.google.com/'
-                    ),
-                    URIAction(
-                        label='Yahoo',
-                        uri='https://www.yahoo.com/'
-                    ),
-                    URIAction(
-                        label='OpenAI',
-                        uri='https://openai.com/'
-                    )
-                ]
-            )
-        )
+    # if msg == 'LinkedIn':
+    #     message = TemplateSendMessage(
+    #         alt_text='LinkedIn',
+    #         template=ButtonsTemplate(
+    #             title='進去',
+    #             text='請選擇進入的網頁',
+    #             actions=[
+    #                 URIAction(
+    #                     label='Google',
+    #                     uri='https://www.google.com/'
+    #                 ),
+    #                 URIAction(
+    #                     label='Yahoo',
+    #                     uri='https://www.yahoo.com/'
+    #                 ),
+    #                 URIAction(
+    #                     label='OpenAI',
+    #                     uri='https://openai.com/'
+    #                 )
+    #             ]
+    #         )
+    #     )
 
 
 if __name__ == "__main__":
