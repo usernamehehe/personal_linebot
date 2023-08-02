@@ -63,6 +63,11 @@ def handle_message(event):
                     messages=[TextMessage(text=a)]
                 )
             )
+    else:
+        ReplyMessageRequest(
+            reply_token=event.reply_token,
+            messages=[TextMessage(text="don't be silly")]
+        )
 
     # if msg == 'LinkedIn':
     #     message = TemplateSendMessage(
