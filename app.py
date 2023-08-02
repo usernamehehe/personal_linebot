@@ -53,21 +53,23 @@ def handle_message(event):
     msg = event.message.text
     crawl_msg = msg[2:]
 
-    if '爬蟲' in msg:
-        a = crawl.crawler(crawl_msg)
-        with ApiClient(configuration) as api_client:
-            line_bot_api = MessagingApi(api_client)
+    with ApiClient(configuration) as api_client:
+        line_bot_api = MessagingApi(api_client)
+        if '爬蟲' in msg:
+            a = crawl.crawler(crawl_msg)
             line_bot_api.reply_message_with_http_info(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
                     messages=[TextMessage(text=a)]
                 )
             )
-    else:
-        ReplyMessageRequest(
-            reply_token=event.reply_token,
-            messages=[TextMessage(text="don't be silly")]
-        )
+        else:
+            line_bot_api.reply_message_with_http_info(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[TextMessage(text="don't be silly")]
+                )
+            )
 
     # if msg == 'LinkedIn':
     #     message = TemplateSendMessage(
