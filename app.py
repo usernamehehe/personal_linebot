@@ -5,7 +5,7 @@ from flask import Flask, request, abort
 from linebot.v3 import (WebhookHandler)
 from linebot.v3.exceptions import (InvalidSignatureError)
 from linebot.v3.messaging import (
-    Configuration, ApiClient, MessagingApi, ReplyMessageRequest, TextMessage)
+    Configuration, ApiClient, MessagingApi, ReplyMessageRequest, TextMessage, FlexMessage, FlexContainer)
 from linebot.v3.webhooks import (MessageEvent, TextMessageContent)
 # from linebot.models import MessageEvent, TextMessage, TemplateSendMessage, ButtonsTemplate, URIAction
 
@@ -51,11 +51,11 @@ def callback():
 @handler.add(MessageEvent, message=TextMessageContent)
 def handle_message(event):
     msg = event.message.text
-    crawl_msg = msg[2:]
-
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
+
         if '爬蟲' in msg:
+            crawl_msg = msg[2:]
             a = crawl.crawler(crawl_msg)
             line_bot_api.reply_message_with_http_info(
                 ReplyMessageRequest(
@@ -63,6 +63,134 @@ def handle_message(event):
                     messages=[TextMessage(text=a)]
                 )
             )
+
+        elif msg == 'About Me':
+            bubble_string = """
+            {
+                "type": "carousel",
+                "contents": [
+                {
+                    "type": "bubble",
+                    "direction": "ltr",
+                    "body": {
+                    "type": "box",
+                    "layout": "vertical",
+                    "contents": [
+                        {
+                        "type": "image",
+                        "url": "https://static.104.com.tw/104main/mobile/img/brand/app_icon.svg",
+                        "size": "full",
+                        "aspectRatio": "1:1",
+                        "aspectMode": "fit",
+                        "margin": "xxl",
+                        "position": "relative"
+                        },
+                        {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [
+                            {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                                {
+                                "type": "text",
+                                "size": "xxl",
+                                "color": "#ff9933",
+                                "weight": "bold",
+                                "text": "前往 104 履歷",
+                                "action": {
+                                    "type": "uri",
+                                    "label": "action",
+                                    "uri": "https://pda.104.com.tw/profile/share/dhm6aXntxw7KQ8CVyoHL6Ax92PoRIk7U"
+                                },
+                                "align": "center",
+                                "margin": "none"
+                                }
+                            ]
+                            }
+                        ],
+                        "position": "absolute",
+                        "offsetBottom": "0px",
+                        "offsetStart": "0px",
+                        "offsetEnd": "0px",
+                        "backgroundColor": "#FFFFFF",
+                        "paddingAll": "20px",
+                        "paddingTop": "18px"
+                        }
+                    ],
+                    "paddingAll": "0px",
+                    "spacing": "none",
+                    "margin": "none"
+                    }
+                },
+                {
+                    "type": "bubble",
+                    "direction": "ltr",
+                    "body": {
+                    "type": "box",
+                    "layout": "vertical",
+                    "contents": [
+                        {
+                        "type": "image",
+                        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/LinkedIn_logo_initials.png/800px-LinkedIn_logo_initials.png",
+                        "size": "full",
+                        "aspectRatio": "1:1",
+                        "aspectMode": "fit",
+                        "margin": "xxl",
+                        "position": "relative"
+                        },
+                        {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [
+                            {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                                {
+                                "type": "text",
+                                "size": "xxl",
+                                "color": "#0077b5",
+                                "weight": "bold",
+                                "text": "前往 LinkedIn",
+                                "action": {
+                                    "type": "uri",
+                                    "label": "action",
+                                    "uri": "https://www.linkedin.com/in/chiahoyu/"
+                                },
+                                "align": "center",
+                                "margin": "none"
+                                }
+                            ]
+                            }
+                        ],
+                        "position": "relative",
+                        "offsetBottom": "0px",
+                        "offsetStart": "0px",
+                        "offsetEnd": "0px",
+                        "backgroundColor": "#FFFFFF",
+                        "paddingAll": "20px",
+                        "paddingTop": "18px"
+                        }
+                    ],
+                    "paddingAll": "0px",
+                    "spacing": "none",
+                    "margin": "none"
+                    }
+                }
+                ]
+            }
+            """
+            message = FlexMessage(
+                alt_text="cv", contents=FlexContainer.from_json(bubble_string))
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[message]
+                )
+            )
+
         else:
             line_bot_api.reply_message_with_http_info(
                 ReplyMessageRequest(
