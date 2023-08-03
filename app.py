@@ -1,4 +1,3 @@
-#from bs4 import BeautifulSoup
 from urllib.request import urlretrieve
 
 from flask import Flask, request, abort
@@ -7,7 +6,6 @@ from linebot.v3.exceptions import (InvalidSignatureError)
 from linebot.v3.messaging import (
     Configuration, ApiClient, MessagingApi, ReplyMessageRequest, TextMessage, FlexMessage, FlexContainer)
 from linebot.v3.webhooks import (MessageEvent, TextMessageContent)
-# from linebot.models import MessageEvent, TextMessage, TemplateSendMessage, ButtonsTemplate, URIAction
 
 
 # ======python的函數庫==========
@@ -183,11 +181,11 @@ def handle_message(event):
             }
             """
             message = FlexMessage(
-                alt_text="cv", contents=FlexContainer.from_json(bubble_string))
+                alt_text="CV", contents=FlexContainer.from_json(bubble_string))
             line_bot_api.reply_message(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
-                    messages=[message]
+                    messages=[TextMessage(text='瀏覽我的履歷相關資訊') + message]
                 )
             )
 
@@ -198,29 +196,6 @@ def handle_message(event):
                     messages=[TextMessage(text="don't be silly")]
                 )
             )
-
-    # if msg == 'LinkedIn':
-    #     message = TemplateSendMessage(
-    #         alt_text='LinkedIn',
-    #         template=ButtonsTemplate(
-    #             title='進去',
-    #             text='請選擇進入的網頁',
-    #             actions=[
-    #                 URIAction(
-    #                     label='Google',
-    #                     uri='https://www.google.com/'
-    #                 ),
-    #                 URIAction(
-    #                     label='Yahoo',
-    #                     uri='https://www.yahoo.com/'
-    #                 ),
-    #                 URIAction(
-    #                     label='OpenAI',
-    #                     uri='https://openai.com/'
-    #                 )
-    #             ]
-    #         )
-    #     )
 
 
 if __name__ == "__main__":
