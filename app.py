@@ -185,7 +185,8 @@ def handle_message(event):
             line_bot_api.reply_message(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
-                    messages=[TextMessage(text='瀏覽我的履歷相關資訊') + message]
+                    messages=[TextMessage(text='瀏覽我的履歷相關資訊')]+[message]
+
                 )
             )
 
